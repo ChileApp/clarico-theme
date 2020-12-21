@@ -5,8 +5,8 @@ from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale_wishlist.controllers.main import WebsiteSaleWishlist
 
+
 class claricoRecentlyViewed(WebsiteSale):
-    
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **post):
         response = super(claricoRecentlyViewed, self).product(product=product, category=category, search=search, **post)
@@ -16,7 +16,7 @@ class claricoRecentlyViewed(WebsiteSale):
             product = request.env['product.template'].search([('id','in',request.session['recently_viewed_product_ids'])])
             response.qcontext['recently_viewed_product'] = product
         return response
-    
+
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         response = super(claricoRecentlyViewed, self).cart(**post)
@@ -25,19 +25,17 @@ class claricoRecentlyViewed(WebsiteSale):
             product = request.env['product.template'].search([('id','in',request.session['recently_viewed_product_ids'])])
             response.qcontext['recently_viewed_product'] = product
         return response
-    
 
     def update_recently_viewed_items(self,product_id):
         recently_viewed_product_ids = request.session.get( 'recently_viewed_product_ids', False)
         if recently_viewed_product_ids :
             if product_id not in request.session['recently_viewed_product_ids'] :
                 tmp = recently_viewed_product_ids
-                tmp.append(product_id)    
+                tmp.append(product_id)
                 request.session['recently_viewed_product_ids'] = tmp
         else :
             request.session['recently_viewed_product_ids'] = [product_id]
         return request.session['recently_viewed_product_ids']
-    
 
 
 class claricoWishlist_RecentlyViewed(WebsiteSaleWishlist):
@@ -55,7 +53,7 @@ class claricoWishlist_RecentlyViewed(WebsiteSaleWishlist):
         compute_currency = lambda price: from_currency.compute(price, to_currency)
 
         return compute_currency, pricelist_context, pricelist
-    
+
     @http.route(['/shop/wishlist'], type='http', auth="public", website=True)
     def get_wishlist(self, count=False, **kw):
         response = super(claricoWishlist_RecentlyViewed, self).get_wishlist(count=count,**kw)
@@ -67,7 +65,3 @@ class claricoWishlist_RecentlyViewed(WebsiteSaleWishlist):
             response.qcontext['compute_currency'] =  compute_currency
             response.qcontext['pricelist'] =  pricelist
         return response
-        
-
-
-   

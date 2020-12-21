@@ -8,7 +8,9 @@
 
     # Dependencies
     'depends': [
-        'clarico_wishlist','clarico_product','clarico_cart'
+        'clarico_wishlist',
+        'clarico_product',
+        'clarico_cart',
     ],
 
     # Views
